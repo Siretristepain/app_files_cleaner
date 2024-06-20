@@ -2,6 +2,9 @@ import typer
 from pathlib import Path
 import os
 
+app = typer.Typer()
+
+@app.callback()
 def main(extension: str = typer.Argument(".txt", help="Extension des fichiers à chercher"),
         path: str = typer.Argument(Path.cwd(), help="Répertoire à partir duquel lancer la recherche"),
         delete: bool = typer.Option(False, help="Option de suppression des fichiers trouvés"),
@@ -47,6 +50,7 @@ def main(extension: str = typer.Argument(".txt", help="Extension des fichiers à
         typer.secho(f"Aucun fichier trouvés avec l'extension {extension}", bold=True, bg=typer.colors.GREEN)
 
     # STRUCTURE pour demander la confirmation à l'utilisateur
+    #________________________________________________________
     if delete:
         wrng_msg = typer.style("ATTENTION", bold=True, fg=typer.colors.RED)
         confirmation = typer.confirm(f"{wrng_msg}, êtes-vous sûr de vouloir supprimer tous ces fichiers?")
@@ -59,4 +63,5 @@ def main(extension: str = typer.Argument(".txt", help="Extension des fichiers à
             typer.secho(f"Suppression {file}", fg=typer.colors.RED)
 
 if __name__ == '__main__':
-    typer.run(main)
+    # typer.run(main)
+    app()
