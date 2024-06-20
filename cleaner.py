@@ -1,5 +1,6 @@
 import typer
 from pathlib import Path
+import os
 
 def main(extension: str = typer.Argument(".txt", help="Extension des fichiers à chercher"),
         path: str = typer.Argument(Path.cwd(), help="Répertoire à partir duquel lancer la recherche"),
@@ -38,6 +39,9 @@ def main(extension: str = typer.Argument(".txt", help="Extension des fichiers à
             raise typer.Abort()
         
         typer.echo("Suppression des fichiers")
+        for file in all_files:
+            os.remove(file)
+            typer.secho(f"Suppression {file}", fg=typer.colors.RED)
 
 if __name__ == '__main__':
     typer.run(main)
