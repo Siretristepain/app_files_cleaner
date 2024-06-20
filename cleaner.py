@@ -12,9 +12,12 @@ def main(extension: str = typer.Argument(".txt", help="Extension des fichiers à
     if not extension.startswith('.'):
         extension = f".{extension}"
 
-
-    # On fait la liste des fichiers ayant l'extension souhaitée dans le répertoire souhaité
-    all_files = sorted(f for f in Path(path).iterdir() if (f.is_file()) & (f.suffix == extension))
+    if not recursive:
+        # On fait la liste des fichiers ayant l'extension souhaitée dans le répertoire souhaité
+        all_files = sorted(f for f in Path(path).iterdir() if (f.is_file()) & (f.suffix == extension))
+    else:
+        # On fait également la liste des fichiers avec l'extension, mais on cherche aussi dans les sous-répertoire
+        all_files = sorted(f for f in Path(path).rglob(f"*{extension}"))
 
     typer.echo(f"{all_files}")
 
