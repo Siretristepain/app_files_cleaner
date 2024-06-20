@@ -12,6 +12,8 @@ def main(extension: str = typer.Argument(".txt", help="Extension des fichiers à
     if not extension.startswith('.'):
         extension = f".{extension}"
 
+    # STRUCTURE pour faire la liste des fichiers
+    #___________________________________________
     if not recursive:
         # On fait la liste des fichiers ayant l'extension souhaitée dans le répertoire souhaité
         all_files = sorted(f for f in Path(path).iterdir() if (f.is_file()) & (f.suffix == extension))
@@ -19,7 +21,23 @@ def main(extension: str = typer.Argument(".txt", help="Extension des fichiers à
         # On fait également la liste des fichiers avec l'extension, mais on cherche aussi dans les sous-répertoire
         all_files = sorted(f for f in Path(path).rglob(f"*{extension}"))
 
-    typer.echo(f"{all_files}")
+    # STRUCTURE pour afficher la liste des fichiers trouvés
+    #______________________________________________________
+    if len(all_files) != 0:
+        typer.secho(f"Fichiers trouvés :", underline=True)
+        for file in all_files:
+            typer.secho(file, fg=typer.colors.BLUE)
+    else:
+        typer.echo(f"Aucun fichier trouvés avec l'extension {extension}")
+
+    # STRUCTURE pour demander la confirmation à l'utilisateur
+    if delete:
+        wrng_msg = typer.style("ATTENTION", bold=True, fg=typer.colors.RED)
+        confirmation = typer.confirm(f"{wrng_msg}, êtes-vous sûr de vouloir supprimer tous ces fichiers?")
+        if not confirmation:
+            raise typer.Abort()
+        
+        typer.echo("Suppression des fichiers")
 
 if __name__ == '__main__':
     typer.run(main)
