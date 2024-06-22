@@ -4,7 +4,7 @@ import os
 
 app = typer.Typer()
 
-@app.callback()
+@app.command('run')
 def main(extension: str = typer.Argument(".txt", help="Extension des fichiers à chercher"),
         path: str = typer.Argument(Path.cwd(), help="Répertoire à partir duquel lancer la recherche"),
         delete: bool = typer.Option(False, help="Option de suppression des fichiers trouvés"),
@@ -61,6 +61,14 @@ def main(extension: str = typer.Argument(".txt", help="Extension des fichiers à
         for file in all_files:
             os.remove(file)
             typer.secho(f"Suppression {file}", fg=typer.colors.RED)
+
+@app.command("search")
+def search_only(extension: str):
+    main(extension=extension, path=".", delete=False, recursive=False)
+
+@app.command("delete")
+def delete_directly(extension: str):
+    main(extension=extension, path=".", delete=True, recursive=False)
 
 if __name__ == '__main__':
     # typer.run(main)
